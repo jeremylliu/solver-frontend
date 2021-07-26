@@ -1,7 +1,6 @@
-import {Init} from "./init"
+import React from 'react';
+import Init from './init';
 
 export default function Home() {
-  return (
-    <Init />
-  )
+  return <Init />;
 }
