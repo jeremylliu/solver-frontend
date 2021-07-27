@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 
-export default class ManualInput extends Component {
+interface MyProps {
+  board: Array<String>;
+  onBoardChange: Function;
+}
+
+export default class ManualInput extends Component<MyProps, {}> {
   constructor(props: any) {
     super(props);
-
-    this.state = {
-      board: Array(15).fill(''),
-    };
 
     this.autoTab = this.autoTab.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -18,17 +19,16 @@ export default class ManualInput extends Component {
     console.log('CLICKED');
   };
 
-  onChange = (data: any) => {
-    const { maxLength, value, name } = data.target;
+  onChange = (e) => {
+    const { maxLength, value, name } = e.target;
     const fieldIndex = Number(name);
 
-    let newBoard = this.state.board.slice();
+    let newBoard = this.props.board;
     newBoard[fieldIndex] = value;
-    this.setState({ board: newBoard });
+    this.props.onBoardChange(newBoard);
   };
 
   autoTab = (e) => {
-    console.log(e);
     const BACKSPACE_KEY = 8;
     const DELETE_KEY = 46;
     let nameindex = $(e.target).attr('name') || 0;
@@ -48,6 +48,7 @@ export default class ManualInput extends Component {
     const inputIds = [
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
     ];
+    const board = this.props.board;
     return (
       <div>
         <div className="border grid grid-flow-row grid-cols-4 grid-rows-4 gap-1">
@@ -59,7 +60,7 @@ export default class ManualInput extends Component {
                 name={String(object)}
                 type="text"
                 maxLength={1}
-                value={this.state.board[index]}
+                value={String(board[index])}
                 onChange={this.onChange}
                 onKeyUp={this.autoTab}
               />
@@ -68,7 +69,7 @@ export default class ManualInput extends Component {
         </div>
         <div className="mt-4 flex w-full justify-center ">
           <button
-            className="bg-blue-100 hover:bg-blue-200 rounded-md p-1"
+            className="border-4 border-gray-300 hover:bg-blue-200 rounded-md p-1"
             onClick={this.onTrigger}
           >
             Submit

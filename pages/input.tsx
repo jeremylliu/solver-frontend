@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
 import ManualInput from '../components/input-types/Manual-input';
 
-export default class Input extends Component {
+interface MyState {
+  board: Array<String>;
+}
+
+export default class Input extends Component<{}, MyState> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      board: Array(15).fill(''),
+      board: Array<String>(16).fill(''),
     };
+
+    this.handleBoardChange = this.handleBoardChange.bind(this);
+  }
+
+  handleBoardChange(newBoard: any) {
+    this.setState({ board: newBoard });
   }
 
   render() {
+    const currentBoard = this.state.board;
+
     return (
       <div className="h-full w-full flex">
         <div className="container border w-3/5 h-5/6 bg-gray-200">
@@ -22,7 +34,10 @@ export default class Input extends Component {
               Or Manually Enter Here:
             </p>
           </div>
-          <ManualInput />
+          <ManualInput
+            board={currentBoard}
+            onBoardChange={this.handleBoardChange}
+          />
         </div>
       </div>
     );
