@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.3",
+    "@tailwindcss/aspect-ratio": "^0.2.1",
     "@types/jquery": "^3.5.6",
     "autoprefixer": "^10.3.1",
     "jquery": "^3.6.0",

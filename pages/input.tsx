@@ -17,16 +17,21 @@ export default class Input extends Component<{}, MyState> {
     this.handleBoardChange = this.handleBoardChange.bind(this);
   }
 
-  handleBoardChange(newBoard: any) {
+  handleBoardChange = (newBoard: Array<String>) => {
     this.setState({ board: newBoard });
-  }
+  };
+
+  solve = () => {
+    console.log('RECEIVED');
+    console.log(this.state.board);
+  };
 
   render() {
     const currentBoard = this.state.board;
 
     return (
       <div className="h-full w-full flex">
-        <div className="container border w-3/5 h-5/6 bg-gray-200">
+        <div className="container w-3/5 h-5/6">
           <CameraInput />
         </div>
         <div className="flex flex-col items-center justify-center w-2/5 h-5/6">
@@ -38,6 +43,7 @@ export default class Input extends Component<{}, MyState> {
           <ManualInput
             board={currentBoard}
             onBoardChange={this.handleBoardChange}
+            onSolve={this.solve}
           />
         </div>
       </div>

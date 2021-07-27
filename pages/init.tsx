@@ -26,8 +26,27 @@ export default class Init extends Component {
           <Input />
         </main>
 
-        <footer className="w-full h-16 border-t flex justify-center items-center">
-          TEMP
+        <footer className="w-full h-20 mt-8 pt-4 border-t text-center text-sm">
+          This solver was made by me (GitHub: @jliuu1) to try and
+          finally win a game of word hunt against my friends
+          <br />
+          If you wish to check out my code, the links are below
+          <br />
+          frontend repository:{' '}
+          <a
+            className="text-blue-600 underline"
+            href="https://www.github.com/"
+          >
+            https://www.github.com/
+          </a>
+          <br />
+          backend repository:{' '}
+          <a
+            className="text-blue-600 underline"
+            href="https://www.github.com/"
+          >
+            https://www.github.com/
+          </a>
         </footer>
       </div>
     );

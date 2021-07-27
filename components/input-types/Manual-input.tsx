@@ -4,19 +4,46 @@ import $ from 'jquery';
 interface MyProps {
   board: Array<String>;
   onBoardChange: Function;
+  onSolve: Function;
 }
 
-export default class ManualInput extends Component<MyProps, {}> {
+interface MyState {
+  strings: Boolean;
+  filled: Boolean;
+}
+
+export default class ManualInput extends Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
 
+    this.state = {
+      filled: false,
+      strings: true,
+    };
+
     this.autoTab = this.autoTab.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onTrigger = this.onTrigger.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.check = this.check.bind(this);
   }
 
-  onTrigger = () => {
-    console.log('CLICKED');
+  check = () => {
+    this.setState({ filled: this.props.board.every((e) => e > '') });
+    this.setState({ strings: true });
+    this.props.board.map((e) => {
+      var numCast = Number(e);
+      if (numCast) {
+        this.setState({ strings: false });
+      }
+    });
+  };
+
+  onSubmit = () => {
+    if (this.state.strings && this.state.filled) {
+      this.props.onSolve();
+    } else {
+      console.log('Invalid Input');
+    }
   };
 
   onChange = (e) => {
@@ -24,8 +51,9 @@ export default class ManualInput extends Component<MyProps, {}> {
     const fieldIndex = Number(name);
 
     let newBoard = this.props.board;
-    newBoard[fieldIndex] = value;
+    newBoard[fieldIndex] = value.toLowerCase();
     this.props.onBoardChange(newBoard);
+    this.check();
   };
 
   autoTab = (e) => {
@@ -50,7 +78,7 @@ export default class ManualInput extends Component<MyProps, {}> {
     ];
     const board = this.props.board;
     return (
-      <div>
+      <div className="justify-center">
         <div className="border grid grid-flow-row grid-cols-4 grid-rows-4 gap-1">
           {inputIds.map((object, index) => {
             return (
@@ -70,10 +98,20 @@ export default class ManualInput extends Component<MyProps, {}> {
         <div className="mt-4 flex w-full justify-center ">
           <button
             className="border-4 border-gray-300 hover:bg-blue-200 rounded-md p-1"
-            onClick={this.onTrigger}
+            onClick={this.onSubmit}
           >
             Submit
           </button>
+        </div>
+        <div className="text-red-400 text-center mt-4">
+          <div className="text-black">The board...</div>
+          {!this.state.filled ? (
+            'is not filled'
+          ) : !this.state.strings ? (
+            'cannot contain #s'
+          ) : (
+            <p className="text-black">looks fine</p>
+          )}
         </div>
       </div>
     );
