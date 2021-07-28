@@ -15,11 +15,29 @@ export default class ManualInput extends Component<{}, MyState> {
     };
 
     this.enableWebcam = this.enableWebcam.bind(this);
+    this.capture = this.capture.bind(this);
   }
 
-  enableWebcam() {
+  enableWebcam = () => {
     this.setState({ webcamOn: true });
-  }
+  };
+
+  setRef = (webcam) => {
+    this.webcam = webcam;
+  };
+
+  capture = () => {
+    const imageSrc = this.webcam.getScreenshot();
+    const requestObject = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: imageSrc }),
+    };
+    console.log('running');
+    fetch(`http://localhost:8080/api/image/`, requestObject)
+      .then((res) => res.text()) //make sure to return a json object
+      .then((res) => console.log(res));
+  };
 
   render() {
     return (
@@ -29,6 +47,10 @@ export default class ManualInput extends Component<{}, MyState> {
             className="z-10 w-full h-full"
             audio={false}
             mirrored={true}
+            screenshotFormat="image/jpeg"
+            width={1280}
+            height={720}
+            ref={this.setRef}
           />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center">
@@ -42,6 +64,7 @@ export default class ManualInput extends Component<{}, MyState> {
             </button>
           </div>
         )}
+        <button onClick={this.capture}>TEST</button>
       </div>
     );
   }
