@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Input from './input';
+import W from './public/icons/W.svg';
 
 export default class Init extends Component {
   constructor(props: any) {

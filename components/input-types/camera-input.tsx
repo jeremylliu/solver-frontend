@@ -33,9 +33,8 @@ export default class ManualInput extends Component<{}, MyState> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: imageSrc }),
     };
-    console.log('running');
-    fetch(`http://localhost:8080/api/image/`, requestObject)
-      .then((res) => res.text()) //make sure to return a json object
+    fetch(`http://localhost:5000/api/image/`, requestObject)
+      .then((res) => res.json()) //make sure to return a json object
       .then((res) => console.log(res));
   };
 
@@ -46,7 +45,7 @@ export default class ManualInput extends Component<{}, MyState> {
           <Webcam
             className="z-10 w-full h-full"
             audio={false}
-            mirrored={true}
+            mirrored={false}
             screenshotFormat="image/jpeg"
             width={1280}
             height={720}
