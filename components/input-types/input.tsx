@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ManualInput from '../components/input-types/manual-input';
-import CameraInput from '../components/input-types/camera-input';
+import ManualInput from './manual-input';
+import CameraInput from './camera-input';
 
 interface MyState {
   board: Array<String>;

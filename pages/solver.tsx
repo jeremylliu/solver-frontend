@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import Input from './input';
-import W from './public/icons/W.svg';
+import Input from '../components/input-types/input';
+import Tile from '../components/tiles/tile';
 
-export default class Init extends Component {
+export default class Solver extends Component {
   constructor(props: any) {
     super(props);
   }
@@ -17,12 +17,20 @@ export default class Init extends Component {
             name="description"
             content="Automatically solves word hunt puzzles"
           />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href={'/favicon.ico'} />
         </Head>
 
         <main className="h-5/6">
-          <div className="w-full h-20 flex justify-center text-4xl font-bold">
-            Word Hunt Solver
+          <div className="w-full h-10 flex justify-center text-4xl font-bold mb-10">
+            <div className="flex mr-3">
+              <Tile letter="W" />
+              ord
+            </div>
+            <div className="flex mr-3">
+              <Tile letter="H" />
+              unt
+            </div>
+            Solver
           </div>
           <Input />
         </main>

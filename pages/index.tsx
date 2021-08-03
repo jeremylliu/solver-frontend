@@ -1,6 +1,6 @@
 import React from 'react';
-import Init from './init';
+import Solver from './solver';
 
 export default function Home() {
-  return <Init />;
+  return <Solver />;
 }
