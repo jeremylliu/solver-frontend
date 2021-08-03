@@ -1,14 +1,49 @@
 import React, { Component } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import Input from '../components/input-types/input';
-import Tile from '../components/tiles/tile';
+import Tile from '../components/board/tile';
+import Confirm from '../components/popups/confirm';
 
 export default class Solver extends Component {
   constructor(props: any) {
     super(props);
+
+    this.state = {
+      popup: false,
+    };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
+
+  handleClick() {
+    console.log('CLICKED!');
+    this.setState({ popup: true });
+  }
+
+  closeModal() {
+    this.setState({ popup: false });
+  }
+
   render() {
+    const board = [
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+    ];
     return (
       <div className="min-h-screen h-screen p-10">
         <Head>
@@ -33,6 +68,14 @@ export default class Solver extends Component {
             Solver
           </div>
           <Input />
+          <button onClick={this.handleClick}>TEMP</button>
+          <div>
+            <Confirm
+              open={this.state.popup}
+              board={board}
+              closeModal={this.closeModal}
+            />
+          </div>
         </main>
 
         <footer className="w-full h-20 mt-8 pt-4 border-t text-center text-sm">

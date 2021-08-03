@@ -46,7 +46,7 @@ export default class ManualInput extends Component<MyProps, MyState> {
     }
   };
 
-  onChange = (e) => {
+  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { maxLength, value, name } = e.target;
     const fieldIndex = Number(name);
 
@@ -56,7 +56,7 @@ export default class ManualInput extends Component<MyProps, MyState> {
     this.check();
   };
 
-  autoTab = (e) => {
+  autoTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const BACKSPACE_KEY = 8;
     const DELETE_KEY = 46;
     let nameindex = $(e.target).attr('name') || 0;

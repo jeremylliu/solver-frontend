@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Ref } from 'react';
 import { CameraIcon } from '@heroicons/react/outline';
 import Webcam from 'react-webcam';
 
