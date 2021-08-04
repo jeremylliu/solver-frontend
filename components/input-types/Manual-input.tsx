@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import BoardInput from '../board/boardInput';
 
 interface MyProps {
   board: Array<String>;
@@ -21,7 +22,6 @@ export default class ManualInput extends Component<MyProps, MyState> {
       strings: true,
     };
 
-    this.autoTab = this.autoTab.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.check = this.check.bind(this);
@@ -46,72 +46,52 @@ export default class ManualInput extends Component<MyProps, MyState> {
     }
   };
 
-  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { maxLength, value, name } = e.target;
-    const fieldIndex = Number(name);
-
-    let newBoard = this.props.board;
-    newBoard[fieldIndex] = value.toLowerCase();
+  onChange = (newBoard: Array<String>) => {
     this.props.onBoardChange(newBoard);
     this.check();
   };
 
-  autoTab = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const BACKSPACE_KEY = 8;
-    const DELETE_KEY = 46;
-    let nameindex = $(e.target).attr('name') || 0;
-    nameindex = Number(nameindex);
-    if (e.keyCode === BACKSPACE_KEY) {
-      nameindex -= 1;
-    } else if (e.keyCode !== DELETE_KEY) {
-      nameindex += 1;
-    }
-    const elem = $('[name=' + nameindex + ']');
-    if (elem[0]) {
-      elem.focus();
-    }
-  };
-
   render() {
-    const inputIds = [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-    ];
+    var message;
+    if (!this.state.filled) {
+      message = (
+        <div className="flex justify-center text-red-400">
+          Board is not filled
+        </div>
+      );
+    } else if (!this.state.strings) {
+      message = (
+        <div className="flex justify-center text-red-400">
+          Board can only contain letters
+        </div>
+      );
+    } else {
+      message = <div></div>;
+    }
+
     const board = this.props.board;
     return (
-      <div className="justify-center">
-        <div className="border grid grid-flow-row grid-cols-4 grid-rows-4 gap-1">
-          {inputIds.map((object, index) => {
-            return (
-              <input
-                className="w-10 h-10 rounded-md border text-2xl text-center"
-                key={object}
-                name={String(object)}
-                type="text"
-                maxLength={1}
-                value={String(board[index])}
-                onChange={this.onChange}
-                onKeyUp={this.autoTab}
-              />
-            );
-          })}
+      <div>
+        <div className="flex justify-center items-center">
+          <p className="text-2xl font-medium text-gray-700 mb-4">
+            Manually enter here:
+          </p>
         </div>
-        <div className="mt-4 flex w-full justify-center ">
-          <button
-            className="border-4 border-gray-300 hover:bg-blue-200 rounded-md p-1"
-            onClick={this.onSubmit}
-          >
-            Submit
-          </button>
-        </div>
-        <div className="text-red-400 text-center mt-4">
-          <div className="text-black">The board...</div>
-          {!this.state.filled ? (
-            'is not filled'
-          ) : !this.state.strings ? (
-            'cannot contain #s'
-          ) : (
-            <p className="text-black">looks fine</p>
-          )}
+        <div className="justify-center">
+          <div className="mb-4">
+            <BoardInput board={board} onBoardChange={this.onChange} />
+          </div>
+          <div className="mt-4 flex w-full justify-center ">
+            <button
+              className="w-44 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:col-start-2 sm:text-sm"
+              onClick={this.onSubmit}
+            >
+              Submit
+            </button>
+          </div>
+          <div className="text-red-400 text-center mt-4">
+            {message}
+          </div>
         </div>
       </div>
     );

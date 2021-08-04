@@ -76,6 +76,7 @@ export default class Solver extends Component {
           <div>
             <Confirm
               open={this.state.popup}
+              // onBoardChange={this.onBoardChange}
               onSolve={this.onSolve}
               board={board}
               closeModal={this.closeModal}
@@ -83,27 +84,38 @@ export default class Solver extends Component {
           </div>
         </main>
 
-        <footer className="w-full h-20 mt-8 pt-4 border-t text-center text-sm">
-          This solver was made by me (GitHub: @jliuu1) to try and
-          finally win a game of word hunt against my friends
+        <footer className="w-full h-10 mt-20 pt-4 border-t text-center text-sm">
+          This solver was made by me (
+          <a
+            className="text-blue-600"
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/jliuu1"
+          >
+            @jliuu
+          </a>
+          ) to finally be able to win a game of GamePigeon Word Hunt
+          against my friends.
           <br />
-          If you wish to check out my code, the links are below
-          <br />
-          frontend repository:{' '}
+          If you wish to check out my code, here are the{' '}
           <a
             className="text-blue-600 underline"
-            href="https://www.github.com/"
+            href="https://github.com/word-hunt-solver/solver-frontend"
+            target="_blank"
+            rel="noreferrer"
           >
-            https://www.github.com/
-          </a>
-          <br />
-          backend repository:{' '}
+            frontend
+          </a>{' '}
+          and{' '}
           <a
             className="text-blue-600 underline"
-            href="https://www.github.com/"
+            href="https://github.com/word-hunt-solver/solver-backend"
+            target="_blank"
+            rel="noreferrer"
           >
-            https://www.github.com/
-          </a>
+            backend
+          </a>{' '}
+          respositories. Enjoy!
         </footer>
       </div>
     );

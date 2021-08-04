@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Board from '../board/board';
+import BoardInput from '../board/boardInput';
 
 interface MyProps {
   board: Array<String>;
+  onBoardChange: Function;
   open: boolean;
   closeModal: Function;
   onSolve: Function;
@@ -12,6 +14,9 @@ interface MyProps {
 
 interface MyState {
   edit: boolean;
+  strings: boolean;
+  filled: boolean;
+  showMessage: boolean;
 }
 
 interface MyState {}
@@ -22,22 +27,36 @@ export default class Confirm extends Component<MyProps, MyState> {
 
     this.state = {
       edit: false,
+      strings: false,
+      filled: false,
+      showMessage: false,
     };
 
     this.setOpen = this.setOpen.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  setOpen($status: String) {
+  async setOpen($status: String) {
     if ($status == 'Edit') {
       this.setState({ edit: true });
     } else if ($status == 'Solve') {
       this.props.onSolve(this.props.board);
       this.closeModal(false);
-      console.log('redirect');
     } else if ($status == 'Redetect') {
       this.closeModal(false);
       this.setState({ edit: false });
+      this.props.onBoardChange([]);
+    } else if ($status == 'Check') {
+      await this.check();
+      if (!this.state.filled || !this.state.strings) {
+        this.setState({ showMessage: true });
+      } else {
+        this.setState({ showMessage: false });
+        this.setState({ edit: false });
+        this.props.onSolve(this.props.board);
+        this.closeModal(false);
+      }
     }
   }
 
@@ -45,7 +64,40 @@ export default class Confirm extends Component<MyProps, MyState> {
     this.props.closeModal($status);
   }
 
+  onChange = (newBoard: Array<String>) => {
+    this.props.onBoardChange(newBoard);
+    this.check();
+  };
+
+  check = () => {
+    this.setState({ filled: this.props.board.every((e) => e > '') });
+    this.setState({ strings: true });
+    this.props.board.map((e) => {
+      var numCast = Number(e);
+      if (numCast) {
+        this.setState({ strings: false });
+      }
+    });
+  };
+
   render() {
+    var message;
+    if (this.state.showMessage && !this.state.filled) {
+      message = (
+        <div className="flex justify-center text-red-400">
+          Board is not filled
+        </div>
+      );
+    } else if (this.state.showMessage && !this.state.strings) {
+      message = (
+        <div className="flex justify-center text-red-400">
+          Board can only contain letters
+        </div>
+      );
+    } else {
+      message = <div></div>;
+    }
+
     var content;
     if (!this.state.edit) {
       content = (
@@ -93,10 +145,14 @@ export default class Confirm extends Component<MyProps, MyState> {
                 Edit your board
               </Dialog.Title>
               <div className="mt-6 mb-10">
-                <Board board={this.props.board} />
+                <BoardInput
+                  board={this.props.board}
+                  onBoardChange={this.onChange}
+                />
               </div>
             </div>
           </div>
+          {message}
           <div className="sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
             <button
               type="button"
@@ -108,7 +164,7 @@ export default class Confirm extends Component<MyProps, MyState> {
             <button
               type="button"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-green-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:col-start-1 sm:text-sm"
-              onClick={() => this.setOpen('Solve')}
+              onClick={() => this.setOpen('Check')}
             >
               Solve
             </button>
@@ -116,6 +172,7 @@ export default class Confirm extends Component<MyProps, MyState> {
         </div>
       );
     }
+
     return (
       <Transition.Root show={this.props.open} as={Fragment}>
         <Dialog
