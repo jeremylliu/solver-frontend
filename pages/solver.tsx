@@ -25,6 +25,10 @@ export default class Solver extends Component {
     this.setState({ popup: false });
   }
 
+  onSolve(board: Array<String>) {
+    console.log('SOLVING');
+  }
+
   render() {
     const board = [
       'A',
@@ -72,6 +76,7 @@ export default class Solver extends Component {
           <div>
             <Confirm
               open={this.state.popup}
+              onSolve={this.onSolve}
               board={board}
               closeModal={this.closeModal}
             />
