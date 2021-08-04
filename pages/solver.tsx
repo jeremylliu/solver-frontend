@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Head from 'next/head';
 import Input from '../components/input-types/input';
 import Tile from '../components/board/tile';
-import Confirm from '../components/popups/confirm';
 
 export default class Solver extends Component {
   constructor(props: any) {
@@ -73,15 +72,6 @@ export default class Solver extends Component {
           </div>
           <Input />
           <button onClick={this.handleClick}>TEMP</button>
-          <div>
-            <Confirm
-              open={this.state.popup}
-              // onBoardChange={this.onBoardChange}
-              onSolve={this.onSolve}
-              board={board}
-              closeModal={this.closeModal}
-            />
-          </div>
         </main>
 
         <footer className="w-full h-10 mt-20 pt-4 border-t text-center text-sm">

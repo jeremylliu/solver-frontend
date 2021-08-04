@@ -2,25 +2,36 @@ import React, { Component } from 'react';
 import { CameraIcon } from '@heroicons/react/outline';
 import Webcam from 'react-webcam';
 import { Switch } from '@headlessui/react';
+import { processImage } from '../../lib/api';
+import Confirm from '../popups/confirm';
+
+interface MyProps {
+  board: Array<String>;
+  onBoardChange: Function;
+  onSolve: Function;
+}
 
 interface MyState {
   webcamOn: boolean;
   enabled: boolean;
+  popup: boolean;
 }
 
-export default class ManualInput extends Component<{}, MyState> {
+export default class ManualInput extends Component<MyProps, MyState> {
   constructor(props: any) {
     super(props);
 
     this.state = {
       webcamOn: false,
       enabled: true,
+      popup: false,
     };
 
     this.enableWebcam = this.enableWebcam.bind(this);
     this.capture = this.capture.bind(this);
     this.classNames = this.classNames.bind(this);
     this.setEnabled = this.setEnabled.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   enableWebcam = () => {
@@ -33,14 +44,14 @@ export default class ManualInput extends Component<{}, MyState> {
 
   capture = () => {
     const imageSrc = this.webcam.getScreenshot();
-    const requestObject = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: imageSrc }),
-    };
-    fetch(`http://localhost:5000/api/image/`, requestObject)
-      .then((res) => res.json()) //make sure to return a json object
-      .then((res) => console.log(res));
+    processImage(imageSrc).then((res) => {
+      if (res.length == 16) {
+        this.props.onBoardChange(res);
+        this.setState({ popup: true });
+      } else {
+        console.log('failed');
+      }
+    });
   };
 
   classNames(...classes: Array<String>) {
@@ -49,6 +60,10 @@ export default class ManualInput extends Component<{}, MyState> {
 
   setEnabled($state: boolean) {
     this.setState({ enabled: $state });
+  }
+
+  closeModal() {
+    this.setState({ popup: false });
   }
 
   render() {
@@ -122,6 +137,13 @@ export default class ManualInput extends Component<{}, MyState> {
             )}
           </div>
         </div>
+        <Confirm
+          open={this.state.popup}
+          onBoardChange={this.props.onBoardChange}
+          onSolve={this.props.onSolve}
+          board={this.props.board}
+          closeModal={this.closeModal}
+        />
       </div>
     );
   }

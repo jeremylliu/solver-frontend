@@ -32,7 +32,11 @@ export default class Input extends Component<{}, MyState> {
     return (
       <div className="h-full w-full flex">
         <div className="container w-3/5 h-full">
-          <CameraInput />
+          <CameraInput
+            board={currentBoard}
+            onBoardChange={this.handleBoardChange}
+            onSolve={this.solve}
+          />
         </div>
         <div className="flex flex-col items-center justify-center w-2/5 h-5/6">
           <ManualInput
