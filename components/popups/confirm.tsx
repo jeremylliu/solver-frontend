@@ -46,7 +46,7 @@ export default class Confirm extends Component<MyProps, MyState> {
     } else if ($status == 'Redetect') {
       this.closeModal(false);
       this.setState({ edit: false });
-      this.props.onBoardChange([]);
+      this.props.onBoardChange(new Array(16).fill(''));
     } else if ($status == 'Check') {
       await this.check();
       if (!this.state.filled || !this.state.strings) {

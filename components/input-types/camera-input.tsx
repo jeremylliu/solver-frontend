@@ -15,6 +15,7 @@ interface MyState {
   webcamOn: boolean;
   enabled: boolean;
   popup: boolean;
+  interval: Number;
 }
 
 export default class ManualInput extends Component<MyProps, MyState> {
@@ -25,6 +26,7 @@ export default class ManualInput extends Component<MyProps, MyState> {
       webcamOn: false,
       enabled: true,
       popup: false,
+      interval: 0,
     };
 
     this.enableWebcam = this.enableWebcam.bind(this);
@@ -34,8 +36,21 @@ export default class ManualInput extends Component<MyProps, MyState> {
     this.closeModal = this.closeModal.bind(this);
   }
 
+  async componentDidUpdate() {
+    if (
+      this.state.enabled &&
+      this.state.webcamOn &&
+      !this.state.popup
+    ) {
+      setTimeout(async () => await this.capture(), 1000);
+    }
+  }
+
   enableWebcam = () => {
     this.setState({ webcamOn: true });
+    setTimeout(() => {
+      this.setState({ webcamOn: false });
+    }, 60000);
   };
 
   setRef = (webcam) => {
@@ -49,7 +64,14 @@ export default class ManualInput extends Component<MyProps, MyState> {
         this.props.onBoardChange(res);
         this.setState({ popup: true });
       } else {
-        console.log('failed');
+        if (
+          this.state.enabled &&
+          this.state.webcamOn &&
+          !this.state.popup &&
+          this.webcam
+        ) {
+          setTimeout(async () => await this.capture(), 250);
+        }
       }
     });
   };
