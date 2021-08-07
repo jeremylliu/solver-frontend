@@ -58,6 +58,7 @@ export default class BoardInput extends Component<MyProps, {}> {
                 value={String(board[index])}
                 onChange={this.onChange}
                 onKeyUp={this.autoTab}
+                autoComplete="off"
               />
             );
           })}

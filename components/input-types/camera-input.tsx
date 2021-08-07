@@ -58,10 +58,17 @@ export default class ManualInput extends Component<MyProps, MyState> {
   };
 
   capture = () => {
-    const imageSrc = this.webcam.getScreenshot();
+    var imageSrc = '';
+    try {
+      imageSrc = this.webcam.getScreenshot();
+    } catch {
+      imageSrc = '';
+    }
+
     processImage(imageSrc).then((res) => {
       if (res.length == 16) {
         this.props.onBoardChange(res);
+        this.setState({ webcamOn: false });
         this.setState({ popup: true });
       } else {
         if (
@@ -70,7 +77,7 @@ export default class ManualInput extends Component<MyProps, MyState> {
           !this.state.popup &&
           this.webcam
         ) {
-          setTimeout(async () => await this.capture(), 250);
+          setTimeout(async () => await this.capture(), 500);
         }
       }
     });
@@ -86,6 +93,7 @@ export default class ManualInput extends Component<MyProps, MyState> {
 
   closeModal() {
     this.setState({ popup: false });
+    this.setState({ webcamOn: true });
   }
 
   render() {

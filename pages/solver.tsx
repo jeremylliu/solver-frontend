@@ -1,52 +1,69 @@
 import React, { Component } from 'react';
 import Head from 'next/head';
 import Input from '../components/input-types/input';
+import Solution from '../components/solution/solution';
 import Tile from '../components/board/tile';
+import { solve } from '../lib/api';
 
-export default class Solver extends Component {
+interface MyState {
+  board: Array<String>;
+  solution: Map<String, Array<Number>>;
+  solve: boolean;
+  loading: boolean;
+}
+
+export default class Solver extends Component<{}, MyState> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      popup: false,
+      board: Array<String>(16).fill(''),
+      solution: null as any,
+      solve: false,
+      loading: true,
     };
 
-    this.handleClick = this.handleClick.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.handleBoardChange = this.handleBoardChange.bind(this);
   }
 
-  handleClick() {
-    console.log('CLICKED!');
-    this.setState({ popup: true });
-  }
+  handleBoardChange = (newBoard: Array<String>) => {
+    this.setState({ board: newBoard });
+  };
 
-  closeModal() {
-    this.setState({ popup: false });
-  }
-
-  onSolve(board: Array<String>) {
-    console.log('SOLVING');
-  }
+  handleSolve = () => {
+    this.setState({ solve: true });
+    var solution = new Map();
+    solve(this.state.board).then((sol) => {
+      for (var key in sol) {
+        var path = [];
+        for (var key2 in sol[key]) {
+          path.push(sol[key][key2]);
+        }
+        solution.set(key, path);
+      }
+      this.setState({ solution: solution });
+      this.setState({ loading: false });
+    });
+  };
 
   render() {
-    const board = [
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'G',
-      'H',
-      'I',
-      'J',
-      'K',
-      'L',
-      'M',
-      'N',
-      'O',
-      'P',
-    ];
+    var content = <div></div>;
+    if (!this.state.solve || this.state.loading) {
+      content = (
+        <Input
+          board={this.state.board}
+          onChange={this.handleBoardChange}
+          onSolve={this.handleSolve}
+        />
+      );
+    } else {
+      content = (
+        <Solution
+          solution={this.state.solution}
+          board={this.state.board}
+        />
+      );
+    }
     return (
       <div className="min-h-screen h-screen p-10">
         <Head>
@@ -70,8 +87,7 @@ export default class Solver extends Component {
             </div>
             Solver
           </div>
-          <Input />
-          <button onClick={this.handleClick}>TEMP</button>
+          {content}
         </main>
 
         <footer className="w-full h-10 mt-20 pt-4 border-t text-center text-sm">

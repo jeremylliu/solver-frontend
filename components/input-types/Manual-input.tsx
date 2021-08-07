@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
 import BoardInput from '../board/boardInput';
 
 interface MyProps {
